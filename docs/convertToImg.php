@@ -131,6 +131,13 @@ try{
         'message' => "Internal Server Error(500): {$e->getMessage()}",
     ]);
     exit(1);
+}catch(\Exception $e){
+    http_response_code(500);
+    echo json_encode([
+        'code'=> 500,
+        'message' => "Internal Server Error(500): {$e->getMessage()}",
+    ]);
+    exit(1);
 }
 
 if( is_array($uploadfile)){
