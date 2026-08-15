@@ -22,10 +22,20 @@
 	<script src="https://n138-kz.github.io/lib/grecaptcha.js"></script>
 </head>
 <body>
-	<h1>PDF to Image</h1>
-	<form action="./convertToImg.php" method="post" enctype="multipart/form-data" accept="application/pdf">
-		<input type="file" name="file_pdf" required>
-		<input type="submit" value="変換">
-	</form>
+	<div class="container">
+		<div class="row">
+			<div class="text-center">
+				<h1>n138-kz.github.io</h1>
+			</div>
+			<hr class="block-center" style="width: 90%; margin-top: 50px; margin-bottom: 50px;">
+			<div class="block-center form-register" style="display: none;">
+				<h2 class="text-center">PDF to Image</h2>
+				<form action="./convertToImg.php" method="post" enctype="multipart/form-data" accept="application/pdf">
+					<input type="file" name="file_pdf" required>
+					<input type="submit" value="変換">
+				</form>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
