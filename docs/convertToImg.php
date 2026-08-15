@@ -141,13 +141,18 @@ try{
 }
 
 try{
+    header('Content-Type: application/zip');
+    header('Content-Disposition: attachment; filename="'.basename($outputdir).'.zip"');
+    header('Cache-Control: private, max-age=0, must-revalidate');
+    header('Pragma: no-cache');
+
+    $tmpStream = fopen('php://temp', 'r+');
     $zip = new \ZipArchive();
-    $filename = "{$outputdir}.zip";
-    if($zip->open($filename, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== TRUE){
+    if($zip->open(stream_get_meta_data($tmpStream)['uri'], ZipArchive::CREATE | ZipArchive::OVERWRITE) !== TRUE) {
         http_response_code(500);
         echo json_encode([
             'code'=> 500,
-            'message' => "Internal Server Error(500): {$e->getMessage()}",
+            'message' => "Internal Server Error(500): Fatal the open zip archive",
         ]);
         exit(1);
     }
@@ -169,6 +174,10 @@ try{
         }
     }
     $zip->close();
+
+    rewind($tmpStream);
+    fpassthru($tmpStream);
+    fclose($tmpStream);
 }catch(\Exception $e){
     http_response_code(500);
     echo json_encode([
@@ -184,11 +193,11 @@ try{
         RecursiveIteratorIterator::CHILD_FIRST
     );
     foreach($files as $file) {
-    	if($file->isDir() === true) {
-    		rmdir($file->getPathname());
-    	} else {
-    		unlink($file->getPathname());
-    	}
+        if($file->isDir() === true) {
+            rmdir($file->getPathname());
+        } else {
+            unlink($file->getPathname());
+        }
     }
     if(! rmdir($outputdir)){
         http_response_code(500);
