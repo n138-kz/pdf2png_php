@@ -134,7 +134,10 @@ try{
 }
 
 if( is_array($uploadfile)){
-echo json_encode($uploadfile, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+echo json_encode([
+    'uploadfile'=>$uploadfile,
+    'outputdir'=>$outputdir,
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 }else{
 header('Content-Type: text/plain; charset=UTF-8');
 var_dump($uploadfile);
