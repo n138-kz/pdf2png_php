@@ -29,6 +29,15 @@ if(('POST' !== $_SERVER['REQUEST_METHOD'])) {
     ]));
 }
 
+if(! isset($_POST) || ! isset($_FILES)){
+    http_response_code(400);
+    echo json_encode([
+        'code'=> 400,
+        'message' => 'Bad Request(400): Mismatch a request type.',
+    ]);
+    exit(1);
+}
+
 $uploadkey = 'file_pdf';
 $outputdir = sys_get_temp_dir() . '/' . bin2hex(random_bytes(32));
 
