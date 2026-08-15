@@ -33,11 +33,12 @@ if(('POST' !== $_SERVER['REQUEST_METHOD'])) {
 $uploadkey = 'file_pdf';
 
 if(! is_uploaded_file($_FILES[$uploadkey]['tmp_name'])){
-	echo json_encode([
-		'code'=> 1,
-		'message' => 'Bad Request(400): File has not uploaded.',
-	]);
-	exit(1);
+    http_response_code(400);
+    echo json_encode([
+        'code'=> 400,
+        'message' => 'Bad Request(400): File has not uploaded.',
+    ]);
+    exit(1);
 }
 
 $uploadfile = $_FILES[$uploadkey];
