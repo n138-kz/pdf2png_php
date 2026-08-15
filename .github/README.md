@@ -41,6 +41,7 @@
 
 - [![](https://www.google.com/s2/favicons?size=64&domain=https://github.com)pdf2png_php](https://github.com/n138-kz/pdf2png_php/)
 - [PHP ImagickでPDFを透過なしpng画像として出力する | Qiita](https://qiita.com/tsunet111/items/eebc43a5e376863ae497)
+- [ディレクトリを再帰的に削除する方法のメモ | Qiita](https://qiita.com/suin/items/b5445ff6fbc21e8d883a)
 
 ## License
 
