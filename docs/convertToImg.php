@@ -62,6 +62,15 @@ switch($uploadfile['error']['code']){
     default: break;
 }
 
+if($uploadfile['error']['code']!==UPLOAD_ERR_OK){
+    http_response_code(400);
+    echo json_encode([
+        'code'=> 400,
+        'message' => 'Bad Request(400): Upload Fail: ' . $uploadfile['error']['detail'],
+    ]);
+    exit(1);
+}
+
 if( is_array($uploadfile)){
 echo json_encode($uploadfile, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 }else{
