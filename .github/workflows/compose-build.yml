@@ -1,0 +1,20 @@
+name: Compose Test Build
+
+on:
+  push:
+    paths:
+      - "**/*.yml"
+      - "**/Dockerfile"
+
+permissions:
+  contents: read
+
+jobs:
+  compose-build:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - uses: actions/checkout@v4
+
+      - name: Build Container
+        run: docker compose -f compose.yml build
