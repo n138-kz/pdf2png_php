@@ -2,7 +2,7 @@
 $uploaddir = '/var/www/uploads/';
 $uploadkey = 'file_pdf';
 
-if(! is_uploaded($_FILES[$uploadkey]['name'])){
+if(! is_uploaded_file($_FILES[$uploadkey]['tmp_name'])){
 	echo json_encode([
 		'code'=> 1,
 		'message' => 'Bad Request(400): File has not uploaded.',
