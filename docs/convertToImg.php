@@ -41,4 +41,25 @@ if(! is_uploaded_file($_FILES[$uploadkey]['tmp_name'])){
 }
 
 $uploadfile = $_FILES[$uploadkey];
+$uploadfile['error'] = ['code'=>$uploadfile['error'],'detail'=>'',];
+switch($uploadfile['error']['code']){
+    case UPLOAD_ERR_OK:
+    $uploadfile['error']['detail']='UPLOAD_ERR_OK';break;
+    case UPLOAD_ERR_INI_SIZE:
+    $uploadfile['error']['detail']='UPLOAD_ERR_INI_SIZE';break;
+    case UPLOAD_ERR_FORM_SIZE:
+    $uploadfile['error']['detail']='UPLOAD_ERR_FORM_SIZE';break;
+    case UPLOAD_ERR_PARTIAL:
+    $uploadfile['error']['detail']='UPLOAD_ERR_PARTIAL';break;
+    case UPLOAD_ERR_NO_FILE:
+    $uploadfile['error']['detail']='UPLOAD_ERR_NO_FILE';break;
+    case UPLOAD_ERR_NO_TMP_DIR:
+    $uploadfile['error']['detail']='UPLOAD_ERR_NO_TMP_DIR';break;
+    case UPLOAD_ERR_CANT_WRITE:
+    $uploadfile['error']['detail']='UPLOAD_ERR_CANT_WRITE';break;
+    case UPLOAD_ERR_EXTENSION:
+    $uploadfile['error']['detail']='UPLOAD_ERR_EXTENSION';break;
+    default: break;
+}
+
 var_dump($uploadfile);
