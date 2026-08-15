@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends \
     pkg-config \
     ghostscript \
+    tree \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN pecl install imagick && docker-php-ext-enable imagick
