@@ -178,11 +178,31 @@ try{
     exit(1);
 }
 
-if(! rmdir($outputdir)){
+try{
+    $files = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($outputdir, FilesystemIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::CHILD_FIRST
+    );
+    foreach($files as $file) {
+    	if($file->isDir() === true) {
+    		rmdir($file->getPathname());
+    	} else {
+    		unlink($file->getPathname());
+    	}
+    }
+    if(! rmdir($outputdir)){
+        http_response_code(500);
+        echo json_encode([
+            'code'=> 500,
+            'message' => 'Internal Server Error(500): Unable cleanup the output directory',
+        ]);
+        exit(1);
+    }
+}catch(\Exception $e){
     http_response_code(500);
     echo json_encode([
         'code'=> 500,
-        'message' => 'Internal Server Error(500): Unable cleanup the output directory',
+        'message' => "Internal Server Error(500): {$e->getMessage()}",
     ]);
     exit(1);
 }
