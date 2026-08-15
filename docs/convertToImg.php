@@ -140,6 +140,44 @@ try{
     exit(1);
 }
 
+try{
+    $zip = new \ZipArchive();
+    $filename = "{$outputdir}.zip";
+    if($zip->open($filename, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== TRUE){
+        http_response_code(500);
+        echo json_encode([
+            'code'=> 500,
+            'message' => "Internal Server Error(500): {$e->getMessage()}",
+        ]);
+        exit(1);
+    }
+    $files = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($outputdir, RecursiveDirectoryIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::LEAVES_ONLY
+    );
+    foreach ($files as $name => $file) {
+        // ディレクトリはスキップ（ファイルのみを対象にする）
+        if (!$file->isDir()) {
+            // ファイルの絶対パス
+            $filePath = $file->getRealPath();
+
+            // ZIP内での相対パスを計算（元のフォルダ構造を維持するため）
+            $relativePath = substr($filePath, strlen($outputdir) + 1);
+
+            // ZIPにファイルを追加
+            $zip->addFile($filePath, $relativePath);
+        }
+    }
+    $zip->close();
+}catch(\Exception $e){
+    http_response_code(500);
+    echo json_encode([
+        'code'=> 500,
+        'message' => "Internal Server Error(500): {$e->getMessage()}",
+    ]);
+    exit(1);
+}
+
 if( is_array($uploadfile)){
 echo json_encode([
     'uploadfile'=>$uploadfile,
