@@ -1,5 +1,4 @@
 <?php
-$uploaddir = '/var/www/uploads/';
 session_name('SID');
 session_start([
     'cookie_lifetime' => 86400,
