@@ -30,7 +30,16 @@ if(('POST' !== $_SERVER['REQUEST_METHOD'])) {
 }
 
 $uploadkey = 'file_pdf';
-$outputdir = sys_get_temp_dir();
+$outputdir = sys_get_temp_dir() . '/' . bin2hex(random_bytes(32));
+
+if(! mkdir($outputdir)){
+    http_response_code(500);
+    echo json_encode([
+        'code'=> 500,
+        'message' => 'Internal Server Error(500): Unable create the output directory',
+    ]);
+    exit(1);
+}
 
 if(! is_uploaded_file($_FILES[$uploadkey]['tmp_name'])){
     http_response_code(400);
