@@ -71,6 +71,15 @@ if($uploadfile['error']['code']!==UPLOAD_ERR_OK){
     exit(1);
 }
 
+if($uploadfile['type']!=='application/pdf'){
+    http_response_code(400);
+    echo json_encode([
+        'code'=> 400,
+        'message' => 'Bad Request(400): Upload file is not pdf file.',
+    ]);
+    exit(1);
+}
+
 if( is_array($uploadfile)){
 echo json_encode($uploadfile, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 }else{
