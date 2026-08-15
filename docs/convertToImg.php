@@ -30,6 +30,7 @@ if(('POST' !== $_SERVER['REQUEST_METHOD'])) {
 }
 
 $uploadkey = 'file_pdf';
+$outputdir = sys_get_temp_dir();
 
 if(! is_uploaded_file($_FILES[$uploadkey]['tmp_name'])){
     http_response_code(400);
@@ -76,6 +77,30 @@ if($uploadfile['type']!=='application/pdf'){
     echo json_encode([
         'code'=> 400,
         'message' => 'Bad Request(400): Upload file is not pdf file.',
+    ]);
+    exit(1);
+}
+
+try{
+    $imagick = new Imagick();
+    $imagick->setResolution(96,96);
+    $imagick->readImage($uploadfile['tmp_name']);
+    $page_count = $imagick->getimagescene();
+    for($i = 0; $i <= $page_count; $i++) {
+        // 背景色を白に設定
+        $imagick->setimageindex($i);
+        $imagick->setImageBackgroundColor('#ffffff');
+        $imagick->setImageAlphaChannel(Imagick::ALPHACHANNEL_REMOVE);
+        $imagick->mergeImageLayers(Imagick::LAYERMETHOD_FLATTEN);
+    }
+    $imagick->setImageFormat('png');
+    $imagick->writeImages("{$outputdir}/_.png", false);
+    $imagick->destroy();
+}catch(\ImagickException $e){
+    http_response_code(500);
+    echo json_encode([
+        'code'=> 500,
+        'message' => "Internal Server Error(500): {$e->getMessage()}",
     ]);
     exit(1);
 }
