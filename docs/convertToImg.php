@@ -40,6 +40,7 @@ if(! isset($_POST) || ! isset($_FILES)){
 
 $uploadkey = 'file_pdf';
 $outputdir = sys_get_temp_dir() . '/' . bin2hex(random_bytes(32));
+$outputdir = sys_get_temp_dir() . '/' . str_replace('php', '', basename($_FILES[$uploadkey]['tmp_name']));
 
 if(! mkdir($outputdir)){
     http_response_code(500);
