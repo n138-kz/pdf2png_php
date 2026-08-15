@@ -51,6 +51,15 @@ if(! mkdir($outputdir)){
     exit(1);
 }
 
+if(! isset($_FILES[$uploadkey])){
+    http_response_code(400);
+    echo json_encode([
+        'code'=> 400,
+        'message' => 'Bad Request(400): Empty Request.',
+    ]);
+    exit(1);
+}
+
 if(! is_uploaded_file($_FILES[$uploadkey]['tmp_name'])){
     http_response_code(400);
     echo json_encode([
