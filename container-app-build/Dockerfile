@@ -7,9 +7,12 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     ghostscript \
     tree \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    libzip-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
+    && docker-php-ext-install zip
 
-RUN pecl install imagick && docker-php-ext-enable imagick
 
 # policy.xml の PDF ブロックを解除するコマンドを RUN の最後などに追加
 RUN sed -i 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' /etc/ImageMagick-*/policy.xml
