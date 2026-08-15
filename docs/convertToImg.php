@@ -178,6 +178,15 @@ try{
     exit(1);
 }
 
+if(! rmdir($outputdir)){
+    http_response_code(500);
+    echo json_encode([
+        'code'=> 500,
+        'message' => 'Internal Server Error(500): Unable cleanup the output directory',
+    ]);
+    exit(1);
+}
+
 if( is_array($uploadfile)){
 echo json_encode([
     'uploadfile'=>$uploadfile,
