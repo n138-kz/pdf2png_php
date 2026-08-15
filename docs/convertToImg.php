@@ -102,8 +102,8 @@ try{
         $imagick->setImageAlphaChannel(Imagick::ALPHACHANNEL_REMOVE);
         $imagick->mergeImageLayers(Imagick::LAYERMETHOD_FLATTEN);
     }
-    $imagick->setImageFormat('png');
-    $imagick->writeImages("{$outputdir}/_.png", false);
+    $imagick->setImageFormat('webp');
+    $imagick->writeImages("{$outputdir}/_.webp", false);
     $imagick->destroy();
 }catch(\ImagickException $e){
     http_response_code(500);
