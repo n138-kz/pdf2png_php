@@ -40,6 +40,7 @@
 ## Refs
 
 - [![](https://www.google.com/s2/favicons?size=64&domain=https://github.com)pdf2png_php](https://github.com/n138-kz/pdf2png_php/)
+- [PHP ImagickでPDFを透過なしpng画像として出力する | Qiita](https://qiita.com/tsunet111/items/eebc43a5e376863ae497)
 
 ## License
 
