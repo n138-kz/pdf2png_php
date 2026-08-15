@@ -140,48 +140,52 @@ try{
     exit(1);
 }
 
-try{
-    header('Content-Type: application/zip');
-    header('Content-Disposition: attachment; filename="'.basename($outputdir).'.zip"');
-    header('Cache-Control: private, max-age=0, must-revalidate');
-    header('Pragma: no-cache');
-
-    $tmpStream = fopen('php://temp', 'r+');
+try {
+    // 一時ファイルを生成
+    $tmpFile = tempnam(sys_get_temp_dir(), 'zip_');
+    
     $zip = new \ZipArchive();
-    if($zip->open(stream_get_meta_data($tmpStream)['uri'], ZipArchive::CREATE | ZipArchive::OVERWRITE) !== TRUE) {
+    if ($zip->open($tmpFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== TRUE) {
         http_response_code(500);
         echo json_encode([
-            'code'=> 500,
-            'message' => "Internal Server Error(500): Fatal the open zip archive",
+            'code' => 500,
+            'message' => "Internal Server Error(500): Failed to open zip archive",
         ]);
         exit(1);
     }
+
     $files = new RecursiveIteratorIterator(
         new RecursiveDirectoryIterator($outputdir, RecursiveDirectoryIterator::SKIP_DOTS),
         RecursiveIteratorIterator::LEAVES_ONLY
     );
     foreach ($files as $name => $file) {
-        // ディレクトリはスキップ（ファイルのみを対象にする）
         if (!$file->isDir()) {
-            // ファイルの絶対パス
             $filePath = $file->getRealPath();
-
-            // ZIP内での相対パスを計算（元のフォルダ構造を維持するため）
             $relativePath = substr($filePath, strlen($outputdir) + 1);
-
-            // ZIPにファイルを追加
             $zip->addFile($filePath, $relativePath);
         }
     }
     $zip->close();
 
-    rewind($tmpStream);
-    fpassthru($tmpStream);
-    fclose($tmpStream);
-}catch(\Exception $e){
+    // ZIP作成成功後にヘッダーを出力（エラー時はJSONを出力できるようにするため）
+    header('Content-Type: application/zip');
+    header('Content-Disposition: attachment; filename="'.basename($outputdir).'.zip"');
+    header('Cache-Control: private, max-age=0, must-revalidate');
+    header('Pragma: no-cache');
+    header('Content-Length: ' . filesize($tmpFile));
+
+    // ファイルを出力して削除
+    readfile($tmpFile);
+    unlink($tmpFile);
+    exit;
+
+} catch (\Exception $e) {
+    if (isset($tmpFile) && file_exists($tmpFile)) {
+        @unlink($tmpFile);
+    }
     http_response_code(500);
     echo json_encode([
-        'code'=> 500,
+        'code' => 500,
         'message' => "Internal Server Error(500): {$e->getMessage()}",
     ]);
     exit(1);
