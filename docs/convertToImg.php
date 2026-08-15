@@ -10,4 +10,5 @@ if(! is_uploaded($_FILES[$uploadkey]['name'])){
 	exit(1);
 }
 
-$uploadfile = $uploaddir . basename($_FILES[$uploadkey]['name']);
+$uploadfile = $_FILES[$uploadkey];
+var_dump($uploadfile);
